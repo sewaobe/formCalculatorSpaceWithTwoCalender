@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- displays site properly based on user's device -->
+
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="./assets/images/favicon-32x32.png"
+        />
+        <link rel="stylesheet" href="style.css" />
+        <title>Frontend Mentor | Age calculator app</title>
+    </head>
+    <body>
+        <div class="container">
+            <form action="" method="POST" id="formCalender">
+                <div class="inputCalender">
+                    <div class="calenderGroupInput">
+                        <label for="valueDay">D A Y</label>
+                        <input
+                            name="valueCalender"
+                            id="valueDay"
+                            type="text"
+                            placeholder="DD"
+                            rules="required:{This field is required}|dateDay"
+                        />
+                        <p class="validMessage"></p>
+                    </div>
+
+                    <div class="calenderGroupInput">
+                        <label for="valueMonth">M O N T H</label>
+                        <input
+                            name="valueCalender"
+                            id="valueMonth"
+                            type="text"
+                            placeholder="MM"
+                            rules="required:{This field is required}|dateMonth"
+                        />
+                        <p class="validMessage"></p>
+                    </div>
+                    <div class="calenderGroupInput">
+                        <label for="valueYear">Y E A R</label>
+                        <input
+                            name="valueCalender"
+                            id="valueYear"
+                            type="text"
+                            placeholder="YYYY"
+                            rules="required:{This field is required}|dateYear"
+                        />
+                        <p class="validMessage"></p>
+                    </div>
+
+                    <button class="btnCalender"></button>
+                </div>
+                <div class="resultCalender">
+                    <div class="calenderGroupResult">
+                        <p class="calenderGroupResult-result">- -</p>
+                        years
+                    </div>
+                    <div class="calenderGroupResult">
+                        <p class="calenderGroupResult-result">- -</p>
+                        months
+                    </div>
+                    <div class="calenderGroupResult">
+                        <p class="calenderGroupResult-result">- -</p>
+                        days
+                    </div>
+                </div>
+            </form>
+        </div>
+        <script src="https://sewaobe.github.io/CustomLibrary/validator.js"></script>
+        <script>
+            const formCalender = new Validator('#formCalender', {
+                errorElement: '.validMessage',
+                errorDate: {
+                    rulesInputDay: 'required:{This field is required}|dateDay',
+                    errorMessage: 'Must be a valid date',
+                },
+            });
+
+            formCalender.onSubmit = data => {
+                const dayOfMonth = [
+                    0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
+                ];
+                var dayInput = Number(data.valueDay),
+                    monthInput = Number(data.valueMonth),
+                    yearInput = Number(data.valueYear);
+                var curDate = new Date(Date.now());
+
+                let valueYear = curDate.getFullYear() - yearInput;
+                let valueMonth = curDate.getMonth() - monthInput + 1;
+                let valueDay = curDate.getDate() - dayInput;
+
+                if (valueMonth < 0) {
+                    valueMonth += 12;
+                    valueYear--;
+                }
+
+                if (valueDay < 0) {
+                    if (
+                        yearInput % 400 == 0 ||
+                        (yearInput % 4 == 0 && yearInput % 100 != 0)
+                    )
+                        dayOfMonth[2] = 29;
+                    valueDay += dayOfMonth[monthInput];
+                    valueMonth--;
+                }
+                const valueElement = document.querySelectorAll(
+                    '.calenderGroupResult-result'
+                );
+                [valueYearElement, valueMonthElement, valueDayElement] =
+                    valueElement;
+                valueYearElement.innerText = valueYear;
+                valueMonthElement.innerText = valueMonth;
+                valueDayElement.innerText = valueDay;
+            };
+        </script>
+    </body>
+</html>
